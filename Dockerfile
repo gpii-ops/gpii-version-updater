@@ -28,9 +28,4 @@ COPY \
     ./spec
 RUN chmod -R +rX * && chmod +x sync_images_wrapper
 
-# * When the container restarts, dockerd dies and orphans its pid file. This
-# prevents dockerd from starting in the restarted container, so we clean it up.
-#
-# * Since we fork to run dockerd and also the real entrypoint script, give
-# dockerd a few seconds to start up before potentially trying to use it.
-CMD rm -f /var/run/docker.pid && dockerd & sleep 5 && ./sync_images_wrapper
+CMD ./sync_images_wrapper

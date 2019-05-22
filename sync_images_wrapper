@@ -13,6 +13,17 @@ git config --global user.name "GPII Bot"
 # When an existing container is restarted, the sandbox is left behind. Clear it
 # out and start over.
 rm -rf gpii-infra
+
+# When the container restarts, dockerd dies and can orphan some runtime state
+# files (pid file, sockets). This prevents dockerd from starting in the
+# restarted container, so we clean it up.
+rm -rf /var/run/docker.pid /var/run/docker
+
+# Start dockerd in the background and give it a few seconds to start up before
+# potentially trying to use it.
+dockerd &
+sleep 5
+
 # We don't need the full history, but we want a few previous revisions in case
 # we need those revisions to push to a remote (e.g. gitlab) that hasn't been
 # updated in a bit.
