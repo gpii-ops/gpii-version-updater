@@ -8,7 +8,7 @@ class SyncImages
 
   CONFIG_FILE = "../gpii-infra/shared/versions.yml"
   CREDS_FILE = "./creds.json"
-  DESIRED_COMPONENTS = ["dataloader", "flowmanager", "flushtokens", "istio_proxy_manager", "preferences"]
+  DESIRED_COMPONENTS = ["dataloader", "flowmanager", "flushtokens", "preferences"]
   DESIRED_COMPONENTS_ALL_TOKEN = "ALL"
   DESIRED_COMPONENTS_DEFAULT_TOKEN = "DEFAULT"
   PUSH_TO_GCR = false
