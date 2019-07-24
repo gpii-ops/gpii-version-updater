@@ -206,15 +206,16 @@ describe SyncImages do
 
     allow(SyncImages).to receive(:pull_image).and_return(fake_image)
     allow(SyncImages).to receive(:retag_image).and_return(fake_new_repository)
-    allow(SyncImages).to receive(:get_sha_from_image).and_return(fake_sha)
     allow(SyncImages).to receive(:push_image)
+    allow(SyncImages).to receive(:get_sha_from_image).and_return(fake_sha)
 
     actual = SyncImages.process_image(fake_component, fake_repository, fake_tag, fake_registry_url, fake_push_to_gcr)
 
     expect(SyncImages).to have_received(:pull_image).with(fake_repository, fake_tag)
     expect(SyncImages).to have_received(:retag_image).with(fake_image, fake_registry_url, fake_repository, fake_tag)
-    expect(SyncImages).to have_received(:get_sha_from_image).with(fake_image, fake_new_repository)
     expect(SyncImages).to have_received(:push_image).with(fake_image, fake_new_repository, fake_tag)
+    expect(SyncImages).to have_received(:pull_image).with(fake_new_repository, fake_tag)
+    expect(SyncImages).to have_received(:get_sha_from_image).with(fake_image, fake_new_repository)
     expect(actual).to eq([fake_new_repository, fake_sha, fake_tag])
   end
 
@@ -296,7 +297,7 @@ describe SyncImages do
     fake_registry_url = "gcr.fake/fake-project"
     fake_repository = "fake_org/fake_img"
     fake_tag = "fake_tag"
-    fake_new_repository = "#{fake_registry_url}/#{fake_repository}"
+    fake_new_repository = "#{fake_registry_url}/fake_org__fake_img"
 
     allow(fake_image).to receive(:tag)
     actual = SyncImages.retag_image(fake_image, fake_registry_url, fake_repository, fake_tag)

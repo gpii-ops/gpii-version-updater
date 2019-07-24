@@ -32,7 +32,7 @@ This module contains:
 This workflow is a little cumbersome and is probably best for debugging version-udpater itself.
 
 1. `docker pull gpii/version-updater`
-1. Run the container in interactive mode: `docker run --privileged -it -v version-updater-docker-cache:/var/lib/docker gpii/version-updater sh`
+1. Run the container in interactive mode: `docker run --privileged --rm -it -v version-updater-docker-cache:/var/lib/docker gpii/version-updater sh`
    * If you want to read and write the versions.yml automatically (e.g. by running `sync_images_wrapper`), you must provide a directory containing a `id_rsa.gpii-ci` usable for pulling and pushing to the gpii-infra repo.
       * Add to the command line: `-v $(pwd)/fake-gpii-ci-ssh:/root/.ssh:ro,Z`
    * If you want to upload images (i.e. `push_to_gcr` is set to `true` -- this is the default for `sync_images_wrapper`), you must provide credentials with write access to the production GCR instance (or to the GCR instance you specified).
