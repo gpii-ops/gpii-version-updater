@@ -60,8 +60,10 @@ class SyncImages
     image = self.pull_image(repository, tag)
     if push_to_gcr
       new_repository = self.retag_image(image, registry_url, repository, tag)
-      sha = self.get_sha_from_image(image, new_repository)
       self.push_image(image, new_repository, tag)
+      # Re-pull image so that we (consistently) get the SHA based on the pushed image.
+      image = self.pull_image(new_repository, tag)
+      sha = self.get_sha_from_image(image, new_repository)
     else
       new_repository = repository
       sha = self.get_sha_from_image(image, new_repository)
@@ -105,7 +107,10 @@ class SyncImages
   end
 
   def self.retag_image(image, registry_url, repository, tag)
-    new_repository = "#{registry_url}/#{repository}"
+    # Many applications (Docker Hub, GKE Binary Authorization
+    # admission_whitelist_patterns) do not support slashes after the "username"
+    # component (e.g. host.name/username/image).
+    new_repository = "#{registry_url}/#{repository.gsub("/", "__")}"
     puts "Retagging #{repository} as #{new_repository}..."
     image.tag("repo" => new_repository, "tag" => tag)
     return new_repository
