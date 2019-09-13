@@ -22,6 +22,7 @@ This module contains:
    * To clean up: `rake uninstall`
 
 ## Running on host
+
 * `rake sync` to run `sync_images.rb`
    * You can override some defaults: `rake sync"[./my_versions.yml, gcr.io/gpii2test-common-stg]"`
 * `rake clean_cache` to destroy the Docker `/var/lib/docker` cache volume. The volume and cache will be re-created on the next run.
@@ -70,3 +71,9 @@ Each top-level key is a `component`. The component's name is arbitrary, but shou
 1. Ignore everything under `generated`; it will be re-generated.
 1. `rake sync"[/path/to/gpii-infra/shared/versions.yml, your_component]"`
 1. Review the changes made to `versions.yml` and commit.
+
+## Clearing the cache
+1. For local development: `rake clean_cache`
+1. For the production instance on i46: this machine does not provide a helpful development environment (no rake, no git) so it may be easier to:
+   * `docker kill` the running `version-updater` container
+   * Manually run the commands in the Rakefile's `task :clean_cache`
